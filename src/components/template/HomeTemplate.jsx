@@ -1,5 +1,6 @@
 import HomeLayout from "../home/HomeLayout";
-const HomeTemplate = ({ datas, isFetching, error }) => {
+import routes from "@/routes";
+const HomeTemplate = ({ datas, isFetching, error, modal }) => {
   return (
     <div>
       {error ? (
@@ -8,7 +9,14 @@ const HomeTemplate = ({ datas, isFetching, error }) => {
         datas &&
         // eslint-disable-next-line react/prop-types
         datas.map((data, id) => (
-          <HomeLayout id={id} data={data} what="home" key={id} />
+          <HomeLayout
+            id={id}
+            data={data}
+            what="home"
+            key={id}
+            route={routes.home}
+            modal={modal}
+          />
         ))
       )}
     </div>

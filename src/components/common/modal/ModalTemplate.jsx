@@ -9,9 +9,10 @@ import { useEffect, useState } from "react";
 import Modal from "./Modal";
 import ShareForm from "./ShareForm";
 import styled from "styled-components";
+import ChatBeta from "./ChatBeta";
 // import routes from "@/routes";
 
-const ModalTemplate = (datas, what) => {
+const ModalTemplate = ({ detailData, click, what }) => {
   const {
     totalCount,
     participate,
@@ -24,13 +25,12 @@ const ModalTemplate = (datas, what) => {
     username,
     category,
     id,
-  } = datas?.detailData;
+  } = detailData;
 
   const [optionState, setOptionState] = useState(options);
   const [participateState, setParticipate] = useState(participate);
   const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {}, [participateState]);
   const shareCloseModal = () => {
     setModalVisible(false);
   };
@@ -39,6 +39,7 @@ const ModalTemplate = (datas, what) => {
   };
 
   const changeVotes = (participate, result) => {
+    click(participate, result);
     setParticipate(participate);
 
     const copyOptions = optionState?.map((choice, index) => {
@@ -69,10 +70,10 @@ const ModalTemplate = (datas, what) => {
           <MainContent title={title} content={content}></MainContent>
 
           <ButtonLayout
-            participate={participateState || participate}
+            participate={participateState}
             isOwner={isOwner}
             active={active}
-            options={optionState || options}
+            options={optionState}
             changeVotes={changeVotes}
           ></ButtonLayout>
 
@@ -89,8 +90,7 @@ const ModalTemplate = (datas, what) => {
           )}
         </Container>
         <Chat>
-          <ChatForm data={datas.chatData} />
-          <ChatWriteForm participate={participateState || participate} />
+          <ChatBeta participate={participateState}/>
         </Chat>
       </ModalMainContainer>
     </div>
