@@ -1,4 +1,4 @@
-import { InputStyle } from "./input";
+import { InputStyle } from "./Input";
 import styled from "styled-components";
 import { useRef } from "react";
 import { useRecoilState } from "recoil";
