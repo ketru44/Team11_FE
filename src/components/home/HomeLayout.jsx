@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import Modal from "../common/modal/Modal";
 import ModalLayout from "../common/modal/ModalLayout";
 import { useNavigate, useParams } from "react-router-dom";
+import ShareForm from "../common/modal/ShareForm";
 
 /**
  *
@@ -16,7 +17,7 @@ import { useNavigate, useParams } from "react-router-dom";
  * @param {string} props.what
  */
 
-const HomeLayout = ({ data, what, route, modal }) => {
+const HomeLayout = ({ data, what, route }) => {
   const navigate = useNavigate();
   const { id: modalId } = useParams();
 
@@ -37,20 +38,25 @@ const HomeLayout = ({ data, what, route, modal }) => {
     participate && participate
   );
   const [modalVisible, setModalVisible] = useState(modal);
+  const [shareModalVisible, setShareModalVisible] = useState(false);
   const [optionState, setOptionState] = useState(options);
+  const [totalCountState, setTotalCountState] = useState(totalCount);
+
   const changeVotes = (participate, result) => {
+    const resultData = result?.result;
     setParticipate(participate);
 
     const copyOptions = optionState?.map((choice, index) => {
       return {
         ...choice,
-        optionCount: result[index]?.optionCount,
-        optionRatio: result[index]?.optionRatio,
-        choice: result[index].choice,
+        optionCount: resultData[index]?.optionCount,
+        optionRatio: resultData[index]?.optionRatio,
+        choice: resultData[index].choice,
       };
     });
 
     setOptionState(copyOptions);
+    setTotalCountState(result?.total);
   };
 
   const clickModal = (data) => {
@@ -61,11 +67,18 @@ const HomeLayout = ({ data, what, route, modal }) => {
     navigate(route);
     setModalVisible(false);
   };
+
+  const shareCloseModal = () => {
+    setShareModalVisible(false);
+  };
+  const shareOpenModal = () => {
+    setShareModalVisible(true);
+  };
   return (
     <MainContainer>
       <Container>
         <VoteHead
-          totalCount={totalCount}
+          totalCount={totalCountState}
           endDate={endDate}
           what={what}
           username={username}
@@ -87,8 +100,20 @@ const HomeLayout = ({ data, what, route, modal }) => {
 
         <VoteBottom
           onClick={() => clickModal(data)}
-          modal={false}
+          onClickShare={shareOpenModal}
+          modal={true}
+          id={id}
         ></VoteBottom>
+        {shareModalVisible && (
+          <Modal
+            visible={shareModalVisible}
+            closable={true}
+            maskClosable={true}
+            onClose={shareCloseModal}
+          >
+            <ShareForm id={id} />
+          </Modal>
+        )}
         {modalVisible && modalId == id && (
           <Modal
             visible={modalVisible}
